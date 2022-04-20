@@ -35,13 +35,13 @@ export default function Card(props) {
             pic = <img src={swim} className='h-20' />
             break;
         case 'Badminton':
-            pic = <img src={yoga} className='h-20' />
-            break;
-        case 'Treadmil running':
             pic = <img src={badminton} className='h-20' />
             break;
-        case 'Yoga':
+        case 'Treadmil running':
             pic = <img src={treadmil} className='h-20' />
+            break;
+        case 'Yoga':
+            pic = <img src={yoga} className='h-20' />
             break;
         default:
             break;
