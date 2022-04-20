@@ -1,0 +1,19 @@
+
+  
+  .back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-size: 40px;
+    background: white;
+    cursor: pointer;
+    border-radius: 100px;
+    border: none;
+    box-shadow: 0 5px 10px #ccc;
+  }
+  
+  .back-to-top:hover {
+    background: #EBEBEB;
+    
+  }
+  

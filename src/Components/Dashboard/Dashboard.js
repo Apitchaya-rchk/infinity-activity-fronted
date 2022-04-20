@@ -26,6 +26,7 @@ export default function Dashboard() {
 
     const [records, setRecords] = useState([]);
     const [filter, setFilter] = useState(() => filterDateCard);
+    
 
     async function FetchData() {
         await axios
