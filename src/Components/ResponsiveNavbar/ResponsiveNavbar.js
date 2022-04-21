@@ -15,9 +15,9 @@ export default function ResponsiveNavbar() {
                     <img src={logo} alt='Logo' className="h-7 w-auto md:w-fit object-cover" />
                     <div className="text-sm md:text-base">Infinity Activity</div>
                 </div>
-                <ul className="navSection flex space-x-4 items-center ">
-                    <li className="text-sm md:text-base"><Link to="/addjourney">New Journey</Link></li>
-                    <li className="text-sm md:text-base"><Link to="/dashboard">Journey</Link></li>
+                <ul className="navSection flex  items-center ">
+                    <li className="text-sm md:text-base border-r-2 pr-2 hover:text-lg duration-300 cursor-pointer"><Link to="/addjourney">New Journey</Link></li>
+                    <li className="text-sm md:text-base pl-2 hover:text-lg duration-300 cursor-pointer"><Link to="/dashboard">Journey</Link></li>
                 </ul>
             </div>
         </div>
