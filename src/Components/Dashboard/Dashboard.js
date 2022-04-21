@@ -174,9 +174,9 @@ export default function Dashboard() {
 
                     <div className='profileUser flex flex-col items-center mr-11 md:mr-0 '>
                         <label className='text-2xl md:text-4xl m-5'>Dashboard</label>
-                        <img src={profilePic}
-                            className=' h-28 md:h-full w-auto object-cover' />
-                        <label className='fullname m-3 text-lg'>Tom Holland</label>
+                        <img src='https://1417094351.rsc.cdn77.org/articles/982/981903/thumbnail/small.gif?4'
+                            className=' h-28 md:h-full w-auto object-cover rounded-lg' />
+                        <label className='fullname m-3 text-lg'>Piggy Laylico</label>
                     </div>
 
                     <div className='sort md:my-8 flex flex-col justify-center space-y-4 items-center'>
