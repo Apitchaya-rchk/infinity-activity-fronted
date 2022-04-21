@@ -144,8 +144,8 @@ export default function Dashboard() {
             return allCard;
         } else {
             return (<div className='flex flex-col items-center mt-10 md:mt-48'>
-                <p className=' md:text-lg'> There is currently no activity to display.😢</p>
-                <p className=' md:text-lg'>💘Come to add your wonderful travel activities.💘</p>
+                <p className=' text-sm md:text-lg'> There is currently no activity to display.😢</p>
+                <p className=' text-sm md:text-lg'>💘Come to add your wonderful travel activities.💘</p>
             </div>
             );
         }
