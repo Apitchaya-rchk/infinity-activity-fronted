@@ -23,27 +23,48 @@ const filterDateMonthly = (record) => {
 }
 
 export default function Dashboard() {
-
+    /////////////////////SET STATE/////////////////////
+    //record
     const [records, setRecords] = useState([]);
-    const [filter, setFilter] = useState(() => filterDateCard);
-    
+    //Pagination
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setitemsPerPage] = useState(4);
+    const [pageNumberLimit, setPageNumberLimit] = useState(3);
+    const [maxPageNumberLimit, setMaxPageNumberLimit] = useState(3);
+    const [minPageNumberLimit, setMinPageNumberLimit] = useState(0);
+    // Filter
+    const [filter, setFilter] = useState(() => filterDateDaily);
+    // 
+    const [isLoading, setsLoading] = useState(true);
 
+    useEffect(() => {
+        FetchData();
+        setsLoading(false);
+    }, []);
+
+    // FetchALLData and 
     async function FetchData() {
         await axios
-            // .get(`http://localhost:4000/records/`)
             .get(`https://infinity-activity-backed.vercel.app/records`)
             .then((res) => {
-                setRecords(res.data);
+                setRecords(res.data.sort((a, b) => new Date(b.date) - new Date(a.date)));
                 console.log(res.data);
             })
             .catch((err) => {
                 Promise.reject(err);
             })
-    }
-    useEffect(() => {
-        FetchData();
-    }, []);
+    };
 
+    // Pagination
+    const pages = [];
+    for (let i = 1; i <= Math.ceil(records.filter(record => filter(record)).length / itemsPerPage); i++) {
+        pages.push(i);
+    };
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = records.filter(record => filter(record)).slice(indexOfFirstItem, indexOfLastItem);
+
+    ///////////////////// Handle Event /////////////////////
     const confirmDelete = (id) => {
         Swal.fire({
             title: "Are you sure?",
@@ -59,33 +80,90 @@ export default function Dashboard() {
             }
         });
     };
-
     const deleteCard = (id) => {
         axios
-            // .delete(`http://localhost:4000/records/${id}`)
             .delete(`https://infinity-activity-backed.vercel.app/records/${id}`)
             .then(() => {
                 FetchData();
             })
-    }
+    };
 
+    ///////////////////// Handle Event /////////////////////
+    //click select "Filter"
     const handleClickDaily = () => {
         setFilter(() => filterDateDaily)
+        setCurrentPage(1);
+        setMaxPageNumberLimit(3);
+        setMinPageNumberLimit(0);
     }
     const handleClickWeekly = () => {
         setFilter(() => filterDateWeekly)
+        setCurrentPage(1);
+        setMaxPageNumberLimit(3);
+        setMinPageNumberLimit(0);
     }
     const handleClickMonthly = () => {
         setFilter(() => filterDateMonthly)
+        setCurrentPage(1);
+        setMaxPageNumberLimit(3);
+        setMinPageNumberLimit(0);
     }
     const handleClickAll = () => {
         setFilter(() => filterDateCard)
+        setCurrentPage(1);
+        setMaxPageNumberLimit(3);
+        setMinPageNumberLimit(0);
+    }
+    // click select Page 
+    const handleClickPage = (event) => {
+        setCurrentPage(Number(event.target.id));
+    }
+    const handleClickPrev = () => {
+        if ((currentPage - 1) > 0) {
+            setCurrentPage(currentPage - 1);
+            if ((currentPage - 1) % pageNumberLimit === 0) {
+                setMaxPageNumberLimit(maxPageNumberLimit - pageNumberLimit);
+                setMinPageNumberLimit(minPageNumberLimit - pageNumberLimit);
+            }
+        }
+    }
+    const handleClickNext = () => {
+        if ((currentPage) < pages.length) {
+            setCurrentPage(currentPage + 1);
+            if (currentPage + 1 > maxPageNumberLimit) {
+                setMaxPageNumberLimit(maxPageNumberLimit + pageNumberLimit);
+                setMinPageNumberLimit(minPageNumberLimit + pageNumberLimit);
+            }
+        }
     }
 
-    const cards = records
-        .sort((a, b) => new Date(b.date) - new Date(a.date))
-        .filter(record => filter(record))
-        .map((card) => <Card key={card._id} data={card} deleteCard={() => { confirmDelete(card._id) }} />);
+    const renderCards = (records) => {
+        const allCard = records.filter(record => filter(record))
+            .map((card) => <Card key={card._id} data={card} deleteCard={() => { confirmDelete(card._id) }} />)
+        if (allCard.length > 0) {
+            return allCard;
+        } else {
+            return (<div className='flex flex-col items-center mt-10 md:mt-48'>
+                <p className=' md:text-lg'> There is currently no activity to display.😢</p>
+                <p className=' md:text-lg'>💘Come to add your wonderful travel activities.💘</p>
+            </div>
+            );
+        }
+    }
+
+    const renderPageNumbers = pages.map(number => {
+
+        if (number < maxPageNumberLimit + 1 && number > minPageNumberLimit) {
+            return (
+                <li key={number} id={number} onClick={handleClickPage}
+                    className={`p-3 border-[1px] border-gray-400 rounded-md cursor-pointer hover:bg-gray-400  active:bg-gray-400 font-medium  ${currentPage === number ? `bg-gray-400` : `bg-white`}`}>{number}</li>
+            );
+        } else {
+            return null;
+        }
+
+    });
+
 
     return (
         <div className='dashboard flex justify-center w-full'>
@@ -113,10 +191,19 @@ export default function Dashboard() {
                     </div>
                 </div>
                 {/* Dashboard */}
+                {!isLoading &&
+                    <div className='flex m-0 flex-col items-stretch w-full md:w-2/3'>
+                        <ul className="pageNumbers flex justify-center mt-9 space-x-2">
+                            {(pages.length > 3) && !(minPageNumberLimit + 1 === 1) && <li onClick={handleClickPrev}
+                                className='p-3 border-[1px] border-gray-400 rounded-md cursor-pointer hover:bg-gray-300  active:bg-gray-300 font-medium'>Prev</li>}
+                            {renderPageNumbers}
+                            {(pages.length > maxPageNumberLimit) && <li onClick={handleClickNext}
+                                className='p-3 border-[1px] border-gray-400 rounded-md cursor-pointer hover:bg-gray-300  active:bg-gray-300 font-medium'>Next</li>}
+                        </ul>
+                        {renderCards(currentItems)}
+                    </div>
+                }
 
-                <div className='flex m-0 flex-col items-stretch w-full md:w-2/3'>
-                    {cards}
-                </div>
 
             </div>
         </div>

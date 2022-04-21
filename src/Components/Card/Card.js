@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Edit from '../Edit/Edit';
 
 import walk from '../../images/activity-walk.png';
 import run from '../../images/activity-run.png';
